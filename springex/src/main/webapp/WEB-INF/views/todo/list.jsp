@@ -59,7 +59,9 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach items="${dtoList}" var="dto">
+<%--                            페이징 처리 부분, 서버에서 전달 받은 모델 인스턴스를 불러와서, --%>
+<%--                            화면에서 이용하기.--%>
+                            <c:forEach items="${responseDTO.dtoList}" var="dto">
                                 <tr>
                                     <th scope="row"><c:out value="${dto.tno}"/></th>
                                     <td><a href="/todo/read?tno=${dto.tno}" class="text-decoration-none"><c:out value="${dto.title}"/></a></td>

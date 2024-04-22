@@ -37,7 +37,7 @@ public class TodoServiceTests {
   public void testPaging(){
     // 화면에서 전달 받은 파라미터 값
     PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
-        .page(1)
+        .page(2)
         .size(10)
         .build();
 
