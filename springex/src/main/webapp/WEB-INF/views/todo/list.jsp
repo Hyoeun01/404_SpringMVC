@@ -109,6 +109,8 @@
                                     </c:if>
                                 </ul>
                                 <script>
+                                    // 클래스 명 : pagination 이용해서, 요소를 선택 하고
+                                    // 이벤트 핸들러를 추가함.
                                     document.querySelector(".pagination").addEventListener("click",
                                     function (e) { // e : event ,
                                         // 기본적인 기능을 방지 하는 함수.
@@ -117,11 +119,22 @@
 
                                         const target = e.target
 
+                                        // tagName 이름이 A 가 아니라면 함수를 나가고
                                         if(target.tagName !== 'A') {
                                             return
                                         }
+                                        // tagName 이름이 A 이면 함수를 계속 수행한다.
+
+                                        // 현재 페이지의 번호를 가지고 오기.
+                                        //
                                         const num = target.getAttribute("data-num")
 
+                                        // 해댕 페이지로 이동하기.
+                                        // 스프링의 벡엔드 서버에 호출하면, 서버가 응답해서,
+                                        // 해당 페이지로 리다이렉트 함. page 값과, size 을가지고
+                                        // 정확히 하면 PageRequestDTO에 담아서 호출하고,
+                                        // 서버는 PageResponseDTO에 담아서 화면에 보내고,
+                                        // 화면은 해당 인스턴스 이용해서, 화면에 출력하는 형식.
                                         self.location = `/todo/list?page=\${num}`
                                     },false)
                                 </script>
