@@ -20,6 +20,9 @@ public class Board extends BaseEntity{
   @Column(length = 50, nullable = false)
   private String writer;
 
+  // 양방향을 한다면,
+
+
   public void change(String title, String content){
     this.title = title;
     this.content = content;

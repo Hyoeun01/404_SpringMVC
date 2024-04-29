@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.zerock.b01.domain.Board;
 import org.zerock.b01.domain.QBoard;
+import org.zerock.b01.domain.QReply;
+import org.zerock.b01.dto.BoardListReplyCountDTO;
 
 import java.util.List;
 
@@ -69,6 +71,66 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
     // count관련 SQL 실행
     long count = query.fetchCount();
     return new PageImpl<>(list,pageable,count);
+  }
+
+  @Override
+  public Page<BoardListReplyCountDTO> searchWithReplyCount(String[] types, String keyword, Pageable pageable) {
+    //QueryDSL 의 QDomain 사용하기.
+    QBoard board = QBoard.board;
+    QReply reply = QReply.reply;
+
+    JPQLQuery<Board> query = from(board);
+    query.leftJoin(reply).on(reply.board.eq(board));
+
+    query.groupBy(board);
+
+    // p544, 최종 코드로 확인.
+// 위의 코드 중복되어서, 재사용 함.
+    if((types != null && types.length > 0) && (keyword != null)) {
+      BooleanBuilder booleanBuilder = new BooleanBuilder();
+      for(String type : types){
+        switch(type){
+          case "t":
+            // OR title LIKE '%keyword%' : SQL작성
+            booleanBuilder.or(board.title.contains(keyword));
+            break;
+          case "c":
+            // OR content LIKE '%keyword%' : SQL작성
+            booleanBuilder.or(board.content.contains(keyword));
+            break;
+          case "w":
+            // OR writer LIKE '%keyword%' : SQL작성
+            booleanBuilder.or(board.writer.contains(keyword));
+            break;
+        }
+      }
+      // 실행할 쿼리문에 types, keyword 조건절 추가
+      query.where(booleanBuilder);
+    }
+    // AND bno > 0 : WHERE 쿼리 추가
+    query.where(board.bno.gt(0L));
+
+    // p544 쪽 마지막 라인 부분.
+
+    // 추가 부분.
+    JPQLQuery<BoardListReplyCountDTO> dtoQuery = query.select(Projection.bean(
+        BoardListReplyCountDTO.class,
+        board.bno,
+        board.title,
+        board.writer,
+        board.regDate,
+        reply.count().as("replyCount")
+    ));
+
+
+    // ORDER BY bno DESC limit 0,10 : 정렬 및 리미트 SQL추가
+    this.getQuerydsl().applyPagination(pageable, dtoQuery);
+    // SQL 실행
+    List<BoardListReplyCountDTO> dtoList = dtoQuery.fetch();
+    // count관련 SQL 실행
+    long count = dtoQuery.fetchCount();
+    return new PageImpl<>(dtoList,pageable,count);
+
   }
 }
 

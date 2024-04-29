@@ -2,7 +2,6 @@ package org.zerock.b01.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.transaction.annotation.Transactional;
 
 @Entity
 // 댓글 게시글 조회시 인덱스 이용해서, 성능 개선.
