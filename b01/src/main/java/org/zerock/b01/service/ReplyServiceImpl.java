@@ -3,12 +3,20 @@ package org.zerock.b01.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.zerock.b01.domain.Reply;
+import org.zerock.b01.dto.PageRequestDTO;
+import org.zerock.b01.dto.PageResponseDTO;
 import org.zerock.b01.dto.ReplyDTO;
 import org.zerock.b01.repository.ReplyRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -57,5 +65,23 @@ public class ReplyServiceImpl implements ReplyService {
   @Override
   public void remove(Long rno) {
     replyRepository.deleteById(rno);
+  }
+
+  @Override
+  public PageResponseDTO<ReplyDTO> getListOfBoard(Long bno, PageRequestDTO pageRequestDTO) {
+    //PageRequestDTO : 화면에서 백엔드로 보내는 페이징 정보가 들어 있다. 현재 페이지, 크기 등.
+    // 페이징 하기위한 준비물 정보들.
+    Pageable pageable = (Pageable) PageRequest.of(pageRequestDTO.getPage() <= 0 ? 0: pageRequestDTO.getPage()-1,pageRequestDTO.getSize(), Sort.by("rno").ascending());
+    // 페이징 처리가 된 댓글 목로들 조회.
+    Page<Reply> result = replyRepository.listOfBoard(bno,pageable);
+    // 스트림 병렬 처리해서, 여러개 댓글의 내용을, 타입을 변환하기, 엔티티 -> DTO 타입으로 변환. -> 다시 리스트로
+    List<ReplyDTO> dtoList = result.getContent().stream().map(reply -> modelMapper.map(reply,ReplyDTO.class)).collect(Collectors.toList());
+    // 서버에서, 페이징 처리하고, 화면으로 전달 해주기.
+    // PageResponseDTO 로 응답해주기.
+    return PageResponseDTO.<ReplyDTO>withAll()
+        .pageRequestDTO(pageRequestDTO)
+        .dtoList(dtoList)
+        .total((int)result.getTotalElements())
+        .build();
   }
 }
