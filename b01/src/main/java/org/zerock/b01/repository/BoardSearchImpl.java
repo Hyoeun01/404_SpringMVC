@@ -1,6 +1,7 @@
 package org.zerock.b01.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -113,7 +114,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
     // p544 쪽 마지막 라인 부분.
 
     // 추가 부분.
-    JPQLQuery<BoardListReplyCountDTO> dtoQuery = query.select(Projection.bean(
+    JPQLQuery<BoardListReplyCountDTO> dtoQuery = query.select(Projections.bean(
         BoardListReplyCountDTO.class,
         board.bno,
         board.title,
