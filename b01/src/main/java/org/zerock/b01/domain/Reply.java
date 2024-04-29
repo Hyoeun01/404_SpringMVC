@@ -2,13 +2,19 @@ package org.zerock.b01.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.transaction.annotation.Transactional;
 
 @Entity
+// 댓글 게시글 조회시 인덱스 이용해서, 성능 개선.
+@Table(name = "Reply", indexes = {
+    @Index(name = "idx_reply_board_bno", columnList = "board_bno")
+})
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "board")
+@ToString
+
 public class Reply extends BaseEntity{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
