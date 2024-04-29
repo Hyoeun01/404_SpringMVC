@@ -20,6 +20,7 @@ import org.zerock.b01.service.BoardService;
 @Log4j2
 @RequiredArgsConstructor
 public class BoardController {
+  // 주석으로 내용 변경 확인 테스트
   private final BoardService boardService;
   @GetMapping("/list")
   public void list(PageRequestDTO pageRequestDTO, Model model) {
