@@ -53,7 +53,8 @@ public class ReplyController {
     return resultMap;
   }
 
-  // 특정 댓글 하나 조회
+  @Tag(name = "Replies of Board", description = "get 방식특정 게시물의 댓글 목록")
+  // 특정 댓글 목록 조회
   @GetMapping(value = "/list/{bno}")
   public PageResponseDTO<ReplyDTO> getList(@PathVariable("bno") Long bno, PageRequestDTO pageRequestDTO) {
      PageResponseDTO<ReplyDTO> responseDTO= replyService.getListOfBoard(bno, pageRequestDTO);
