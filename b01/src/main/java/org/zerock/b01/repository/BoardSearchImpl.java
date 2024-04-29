@@ -77,6 +77,9 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
   @Override
   public Page<BoardListReplyCountDTO> searchWithReplyCount(String[] types, String keyword, Pageable pageable) {
     //QueryDSL 의 QDomain 사용하기.
+    // Query 애너테이션안에 문자열, sql 문법을 사용시, 컴파일 체크가 안됨.
+    // 그래서, QueryDSL 동적으로 사용하면, 자바 문법 형식으로 데이터베이스 타입으로
+    // 변환이 쉽다.
     QBoard board = QBoard.board;
     QReply reply = QReply.reply;
 
@@ -114,6 +117,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
     // p544 쪽 마지막 라인 부분.
 
     // 추가 부분.
+    // Projections 도구를 이용해서, 엔티티 클래스를 자동으로 DTO타입으로 형변환해준다.
     JPQLQuery<BoardListReplyCountDTO> dtoQuery = query.select(Projections.bean(
         BoardListReplyCountDTO.class,
         board.bno,
