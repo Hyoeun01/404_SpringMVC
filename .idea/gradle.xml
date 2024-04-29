@@ -11,6 +11,14 @@
           </set>
         </option>
       </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="D:/ihd/webworkspace/b01" />
+        <option name="modules">
+          <set>
+            <option value="D:/ihd/webworkspace/b01" />
+          </set>
+        </option>
+      </GradleProjectSettings>
     </option>
   </component>
 </project>
