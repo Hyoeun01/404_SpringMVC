@@ -99,7 +99,7 @@ public class BoardRepositoryTests {
     // 검색할 문자열 저장
     String keyword = "1";
     //몇개의 데이터를 어떤 정렬로 검색할지 설정
-    Pageable pageable = PageRequest.of(0,10,Sort.by("bno").descending());
+    Pageable pageable = PageRequest.of(1,10,Sort.by("bno").descending());
     //위의 조건식으로 데이터베이스에서 조회하는 레포지토리 실행
     Page<BoardListReplyCountDTO> result = boardRepository.searchWithReplyCount(types,keyword,pageable);
 
