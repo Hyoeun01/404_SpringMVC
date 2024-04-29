@@ -50,17 +50,6 @@ public class CustomRestAdvice {
   }
 
   // 데이터 가 존재 하지 않을 경우 예외처리
-  @ExceptionHandler(NoSuchElementException.class)
-  @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
-  public ResponseEntity<Map<String, String>> handleNoSuchElementException(Exception e) {
-    log.error(e);
-    Map<String, String> errorMap = new HashMap<>();
-
-    errorMap.put("time",""+System.currentTimeMillis());
-    errorMap.put("msg","No such element Exception");
-    return ResponseEntity.badRequest().body(errorMap);
-
-  }
 
   // 존재 하지 않은 댓글 번호 삭제시 오류 예외 처리.
   @ExceptionHandler({NoSuchElementException.class, EmptyResultDataAccessException.class})
