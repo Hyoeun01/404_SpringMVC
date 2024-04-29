@@ -2,9 +2,9 @@ package org.zerock.b01.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,14 +12,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.zerock.b01.dto.ReplyDTO;
+import org.zerock.b01.service.ReplyService;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/replies")
+@RequiredArgsConstructor
 @Log4j2
 public class ReplyController {
+
+  private final ReplyService replyService;
 
   @Tag(name = "Replies POST", description = "POST 방식으로 댓글 등록")
   @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -28,7 +32,7 @@ public class ReplyController {
   // 서버에 도착하면 JSON -> ReplyDTO 타입으로 자동으로 변환,
   // Jackson 라이브러리가, 컨버터 역할. 기본 탑재,
   // 요청시, ReplyDTO 의 타입으로, application/json 마임 타입으로 전달 해야함.
-  public ResponseEntity<Map<String, Long>> register(@Valid @RequestBody ReplyDTO replyDTO, BindingResult bindingResult) throws BindException {
+  public Map<String, Long> register(@Valid @RequestBody ReplyDTO replyDTO, BindingResult bindingResult) throws BindException {
 
     log.info(replyDTO);
 
@@ -41,9 +45,12 @@ public class ReplyController {
 
     // 더미데이터 넣기 2
     Map<String, Long> resultMap = new HashMap<>();
-    resultMap.put("rno",1234L);
+    //resultMap.put("rno",1234L);
+    //실제 데이터 넣는 서비스 추가하기.
+    Long rno = replyService.register(replyDTO);
+    resultMap.put("rno", rno);
 
 
-    return ResponseEntity.ok(resultMap);
+    return resultMap;
   }
 }
